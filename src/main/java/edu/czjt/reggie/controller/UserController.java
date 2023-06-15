@@ -37,14 +37,9 @@ public class UserController {
     public R<String> sendMsg(@RequestBody User user, HttpSession session){
         //获取手机号
         String phone = user.getPhone();
-
+        //发送短信验证码 判断手机号是否为空
         if(StringUtils.isNotEmpty(phone)){
-            //生成随机的4位验证码
-            // String code = ValidateCodeUtils.generateValidateCode(4).toString();
-            // log.info("code={}",code);
-            //
-            // //调用阿里云提供的短信服务API完成发送短信
-            // SMSUtils.sendMessage("瑞吉外卖","",phone,code);
+
             String code = "1111";
             //需要将生成的验证码保存到Session
             session.setAttribute(phone,code);
@@ -63,6 +58,7 @@ public class UserController {
      */
     @PostMapping("/login")
     public R<User> login(@RequestBody Map map, HttpSession session){
+
         log.info(map.toString());
 
         //获取手机号
@@ -78,6 +74,7 @@ public class UserController {
         if(codeInSession != null && codeInSession.equals(code)){
             //如果能够比对成功，说明登录成功
 
+            //根据手机号码查询数据库，获取用户信息
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(User::getPhone,phone);
 
@@ -88,10 +85,15 @@ public class UserController {
                 user.setPhone(phone);
                 user.setStatus(1);
                 userService.save(user);
+
             }
+
+            //将用户信息保存到session中
             session.setAttribute("user",user.getId());
+            //返回一个成功响应 包含用户信息
             return R.success(user);
         }
+        //验证码对比失败，返回一个失败响应，提示登录失败
         return R.error("登录失败");
     }
 
