@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 
 /*
 作者：张建强
-添加redis
+集成redis
  */
 @Slf4j
 @RestController
