@@ -5,8 +5,11 @@ import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 //作者：韩正
 //功能：集成rabbitmq
+@Configuration
 public class producercon {
     //队列 起名：TestDirectQueue
     @Bean
