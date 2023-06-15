@@ -12,9 +12,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
 /**
  * 姓名：李硕
- * 内容：异常类模块
+ * 模块：异常类模块
  */
-
 /**
  * 全局异常处理
  */
