@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import edu.czjt.reggie.common.R;
 import edu.czjt.reggie.entity.Employee;
+import edu.czjt.reggie.entity.Redis;
 import edu.czjt.reggie.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +21,11 @@ import java.time.LocalDateTime;
  * 内容：员工管理
  * 日期：2023/6/15
  */
+
+/*
+作者：张建强
+添加redis
+ */
 @Slf4j
 @RestController
 @RequestMapping("/employee")
@@ -27,6 +34,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
 
+    @Autowired
+    RedisTemplate redisTemplate;
+
 
     @PostMapping("/login")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
@@ -34,7 +44,7 @@ public class EmployeeController {
         // 1. 将pwd使用md5加密
         String password = employee.getPassword();
         String username = employee.getUsername();
-
+        Redis r = new Redis(username,password);
         password = DigestUtils.md5DigestAsHex(password.getBytes());
 
         // 2. 根据username查询数据库
@@ -57,6 +67,7 @@ public class EmployeeController {
         }
         // 6. 登录成功，将员工ID存入Session中
         request.getSession().setAttribute("employee", emp.getId());
+        redisTemplate.opsForValue().set("user",r);
         return R.success(emp);
         // return "登录成功";
     }

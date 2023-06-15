@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 /**
  * 庞宇航  订单
- */ /
+ */
 @Service
 @Slf4j
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implements OrderService {
@@ -68,6 +68,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Orders> implement
         if (addressBook == null) {
             throw new CustomException("用户地址信息有误，不能下单");
         }
+
 
         long orderId = IdWorker.getId();//订单号
 
